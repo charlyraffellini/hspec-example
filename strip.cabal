@@ -15,6 +15,7 @@ library
       src
   exposed-modules:
       Data.String.Strip
+      Parser.Monadic1
   build-depends:
       base    == 4.*
 

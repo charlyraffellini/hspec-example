@@ -2,4 +2,8 @@ language: haskell
 
 script:
   - cabal install --only-dependencies --enable-tests
-  - cabal configure --enable-tests --ghc-options=-Werror && cabal build && cabal test
+  - echo "cabal configure --enable-tests --ghc-options=-Werror"
+  - cabal install hspec
+  - cabal configure --enable-tests
+  - cabal build
+  - cabal test

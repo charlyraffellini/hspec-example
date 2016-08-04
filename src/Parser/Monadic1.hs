@@ -1,10 +1,5 @@
-module Data.String.Strip (strip)  where
-
-import Data.Char
-
-strip :: String -> String
-strip = dropWhile isSpace . reverse . dropWhile isSpace . reverse
-
+module Parser.Monadic1 (result,zero,item)  where
+import Data.Char()
 
 type Parser a = String -> [(a,String)]
 
