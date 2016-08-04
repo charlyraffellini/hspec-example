@@ -14,3 +14,7 @@ spec = do
     it "final example" $ do
 	  let xxs = [[1,3,5,2,3,1,2,4,5],[1,2,3,4,5,6,7,8,9],[1,2,4,2,1,6,3,1,3,2,3,6]]
 	  [[ x | x <- xs, even x ] | xs <- xxs]  `shouldBe` [[2,2,4],[2,4,6,8],[2,4,2,6,2,6]]
+    it "PD: using tuples ;)" $ do
+	  let rightTriangles = [ (a,b,c) | c <- [1..10], b <- [1..c], a <- [1..b], a^2 + b^2 == c^2]
+	  rightTriangles `shouldBe` [(3,4,5),(6,8,10)]
+    
