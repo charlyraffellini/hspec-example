@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/hspec/hspec-example.png)](https://travis-ci.org/hspec/hspec-example)
+[![Build Status](https://travis-ci.org/charlyraffellini/hspec-example.svg?branch=master)](https://travis-ci.org/charlyraffellini/hspec-example)
 
 # Running tests
 
