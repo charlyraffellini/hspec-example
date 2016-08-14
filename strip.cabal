@@ -10,12 +10,13 @@ cabal-version:    >= 1.8
 
 library
   ghc-options:
-      -Wall
+      -Wall -XTypeSynonymInstances
   hs-source-dirs:
       src
   exposed-modules:
       Data.String.Strip
       Parser.Monadic1
+      Parser.Monadic2
   build-depends:
       base    == 4.*
 
