@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-unused-do-bind #-}
 
-module Parser.Monadic2 (Parser(Parser), parse) where
+module Parser.Monadic2 (Parser(Parser),parse,(>>=),return) where
 
 --import Prelude hiding ((++))
 
@@ -22,7 +22,6 @@ item = Parser $ \s ->
   case s of
    []     -> []
    (c:cs) -> [(c,cs)]
-
 
 bind :: Parser a -> (a -> Parser b) -> Parser b
 bind p f = Parser $ \s -> concatMap (\(a, s') -> parse (f a) s') $ parse p s
