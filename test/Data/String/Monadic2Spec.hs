@@ -23,3 +23,9 @@ spec = do
       let finalParser = fmap (map toUpper) aParser
       let actual = parse finalParser "abc"
       actual `shouldBe` [("CBA", "")]
+    it "first functor law: fmap id = id" $ do
+      let aParser = Parser (\s -> [(reverse s,"")])
+      let fmapIdParser = fmap id aParser
+      let actual = parse fmapIdParser "abc"
+      let expected = parse aParser "abc"
+      actual `shouldBe` expected
