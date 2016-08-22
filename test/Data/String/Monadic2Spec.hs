@@ -18,3 +18,8 @@ spec = do
       let binded = first >>= (\c -> return $ returnNext c)
       let actual = parse binded "aListOfChar"
       actual `shouldBe` [('b', "ListOfChar")]
+    it "fmap/2" $ do
+      let aParser = Parser (\s -> [(reverse s,"")])
+      let finalParser = fmap (map toUpper) aParser
+      let actual = parse finalParser "abc"
+      actual `shouldBe` [("CBA", "")]
