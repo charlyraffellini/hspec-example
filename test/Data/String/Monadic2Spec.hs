@@ -50,3 +50,8 @@ spec = do
       let dammThing = return "Stuff" >>= computation
       let actual = parse dammThing "aString"
       actual `shouldBe` parse (computation "Stuff") "aString" -- [("aStuff", "String")]
+    it "proof the second monad law - Right identity - m >>= return is just m" $ do
+      let firstParser = Parser (\y -> [([head y],tail y)])
+      let computed =  firstParser >>= (\x -> return x)
+      let actual = parse computed "asd"
+      actual `shouldBe` parse firstParser "asd"
