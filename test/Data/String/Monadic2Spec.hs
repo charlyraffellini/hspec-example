@@ -35,5 +35,13 @@ spec = do
       let fmapUpperReverse = fmap (upperString . reverse) aLazyParser
       let compositeFmaps = ((fmap upperString) . (fmap reverse)) aLazyParser
       let actual = parse fmapUpperReverse "abcd"
-      let expected = parse compositeFmaps "abcds"
+      let expected = parse compositeFmaps "abcd"
       actual `shouldBe` expected
+    it "is applicative - pure" $ do
+      let otherParser = pure "asd"
+      let actual = parse otherParser "1234"
+      actual `shouldBe` [("asd", "1234")]
+    it "is applicative - <*>" $ do
+      let container = Parser (\s -> [((map toUpper),s)]) <*> Parser (\s -> [(reverse s,"")])
+      let actual = runParser container "asd"
+      actual `shouldBe` "DSA"

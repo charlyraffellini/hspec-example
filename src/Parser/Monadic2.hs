@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-unused-do-bind #-}
 
-module Parser.Monadic2 (Parser(Parser),parse,(>>=),return,fmap) where
+module Parser.Monadic2 (Parser(Parser),parse,runParser,(>>=),return,fmap,pure,(<*>)) where
 
 --import Prelude hiding ((++))
 
