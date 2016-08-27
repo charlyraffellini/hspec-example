@@ -55,3 +55,11 @@ spec = do
       let computed =  firstParser >>= (\x -> return x)
       let actual = parse computed "asd"
       actual `shouldBe` parse firstParser "asd"
+    it "proof the third monad law - Associativity" $ do --(m >>= f) >>= g is just like doing m >>= (\x -> f x >>= g)
+      let computation =  (\x -> Parser (\y -> [([head y] ++ x,tail y)]))
+      let otherComputation = (\x -> Parser (\y -> [((map toUpper y) ++ " then " ++ x, "")]))
+      let dammThing = (return "Stuff" >>= computation) >>= otherComputation
+      let actual = parse dammThing "aString"
+      let secondTerm = (return "Stuff") >>= (\x -> (computation x) >>= otherComputation)
+      let expected = parse secondTerm "aString"
+      actual `shouldBe` expected --[("STRING then aStuff","")]
