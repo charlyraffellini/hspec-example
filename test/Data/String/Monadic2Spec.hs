@@ -29,3 +29,11 @@ spec = do
       let actual = parse fmapIdParser "abc"
       let expected = parse aParser "abc"
       actual `shouldBe` expected
+    it "second functor law: fmap (f . g) = fmap f . fmap g" $ do
+      let upperString = map toUpper
+      let aLazyParser = Parser (\s -> [(s,"")])
+      let fmapUpperReverse = fmap (upperString . reverse) aLazyParser
+      let compositeFmaps = ((fmap upperString) . (fmap reverse)) aLazyParser
+      let actual = parse fmapUpperReverse "abcd"
+      let expected = parse compositeFmaps "abcds"
+      actual `shouldBe` expected
