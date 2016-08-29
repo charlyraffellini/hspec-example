@@ -15,7 +15,9 @@ module Parser.Monadic2 (Parser(Parser)
 ,chainl1
 -- Implementations
 ,number
-,reserved) where
+,reserved
+,token
+,string) where
 
 --import Prelude hiding ((++))
 

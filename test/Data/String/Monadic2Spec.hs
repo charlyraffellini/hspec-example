@@ -82,6 +82,10 @@ spec = do
     it "parse int" $ do
       let actual = parse number "1234 string"
       actual `shouldBe` [(1234," string")]
+    it "token/1" $ do
+      let pepeToken = token (string "pepe")
+      let actual = parse pepeToken "pepe      to be continue..."
+      actual `shouldBe` [("pepe", "to be continue...")]
     it "(chainl1/)2" $ do
       -- (>>) :: (Monad m) => m a -> m b -> m b
       -- m >> n = m >>= \_ -> n
