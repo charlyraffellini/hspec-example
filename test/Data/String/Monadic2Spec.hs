@@ -63,3 +63,7 @@ spec = do
       let secondTerm = (return "Stuff") >>= (\x -> (computation x) >>= otherComputation)
       let expected = parse secondTerm "aString"
       actual `shouldBe` expected --[("STRING then aStuff","")]
+    it "is alternative" $ do
+      let optionParser = empty <|> Parser (\x -> [(map toUpper x, "")])
+      let actual = parse optionParser "asd"
+      actual `shouldBe` [("ASD","")]
