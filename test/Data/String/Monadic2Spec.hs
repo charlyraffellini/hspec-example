@@ -63,7 +63,29 @@ spec = do
       let secondTerm = (return "Stuff") >>= (\x -> (computation x) >>= otherComputation)
       let expected = parse secondTerm "aString"
       actual `shouldBe` expected --[("STRING then aStuff","")]
-    it "is alternative" $ do
+    it "is Alternative" $ do
       let optionParser = empty <|> Parser (\x -> [(map toUpper x, "")])
       let actual = parse optionParser "asd"
       actual `shouldBe` [("ASD","")]
+    it "satisfy/1" $ do
+      let satisfyParser = satisfy ((==) 'a')
+      let actual = parse satisfyParser "abc"
+      actual `shouldBe` [('a',"bc")]
+    it "satisfy/1 should fail" $ do
+      let satisfyParser = satisfy (\x -> x == 'a')
+      let actual = parse satisfyParser "bcdafg"
+      actual `shouldBe` []
+    it "oneOf/1" $ do
+      let oneOfParser = oneOf "c vbf ahd"
+      let actual = parse oneOfParser "a string"
+      actual `shouldBe` [('a'," string")]
+    it "parse int" $ do
+      let actual = parse number "1234 string"
+      actual `shouldBe` [(1234," string")]
+    it "(chainl1/)2" $ do
+      -- (>>) :: (Monad m) => m a -> m b -> m b
+      -- m >> n = m >>= \_ -> n
+      let jijijiOperatorParser = reserved "jijiji" >> Parser (\s -> [((\x y -> x+y),s)])
+      let chainedParser = number `chainl1` jijijiOperatorParser
+      let actual = parse chainedParser "200jijiji500"
+      actual `shouldBe` [(700,"")]

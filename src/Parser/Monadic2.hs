@@ -1,12 +1,27 @@
 {-# OPTIONS_GHC -fno-warn-unused-do-bind #-}
 
-module Parser.Monadic2 (Parser(Parser),parse,runParser,(>>=),return,fmap,pure,(<*>),(<|>),empty) where
+module Parser.Monadic2 (Parser(Parser)
+,parse
+,runParser
+,(>>=)
+,return
+,fmap
+,pure
+,(<*>)
+,(<|>)
+,empty
+,oneOf
+,satisfy
+,chainl1
+-- Implementations
+,number
+,reserved) where
 
 --import Prelude hiding ((++))
 
 import Data.Char
 import Control.Monad
-import Control.Applicative
+import Control.Applicative hiding (some,many)
 
 newtype Parser a = Parser { parse :: String -> [(a,String)] }
 
@@ -16,18 +31,6 @@ runParser m s =
     [(res, [])] -> res
     [(_, rs)]   -> error "Parser did not consume entire stream."
     _           -> error "Parser error."
-
-item :: Parser Char
-item = Parser $ \s ->
-  case s of
-   []     -> []
-   (c:cs) -> [(c,cs)]
-
-bind :: Parser a -> (a -> Parser b) -> Parser b
-bind p f = Parser $ \s -> concatMap (\(a, s') -> parse (f a) s') $ parse p s
-
-unit :: a -> Parser a
-unit a = Parser (\s -> [(a,s)])
 
 instance Functor Parser where
   fmap f (Parser cs) = Parser (\s -> [(f a, b) | (a, b) <- cs s])
@@ -47,6 +50,18 @@ instance MonadPlus Parser where
 instance Alternative Parser where
   empty = mzero
   (<|>) = option
+
+item :: Parser Char
+item = Parser $ \s ->
+  case s of
+   []     -> []
+   (c:cs) -> [(c,cs)]
+
+bind :: Parser a -> (a -> Parser b) -> Parser b
+bind p f = Parser $ \s -> concatMap (\(a, s') -> parse (f a) s') $ parse p s
+
+unit :: a -> Parser a
+unit a = Parser (\s -> [(a,s)])
 
 combine :: Parser a -> Parser a -> Parser a
 combine p q = Parser (\s -> parse p s ++ parse q s)
@@ -80,8 +95,57 @@ many v = many_v
     many_v = some_v <|> pure []
     some_v = (:) <$> v <*> many_v
 
+oneOf :: [Char] -> Parser Char
+oneOf s = satisfy (flip elem s)
 
+chainl :: Parser a -> Parser (a -> a -> a) -> a -> Parser a
+chainl p op a = (p `chainl1` op) <|> return a
 
+chainl1 :: Parser a -> Parser (a -> a -> a) -> Parser a
+p `chainl1` op = do {a <- p; rest a}
+  where rest a = (do f <- op
+                     b <- p
+                     rest (f a b))
+                 <|> return a
+
+-- =============================
+-- Implementations
+-- =============================
+
+char :: Char -> Parser Char
+char c = satisfy (c ==)
+
+natural :: Parser Integer
+natural = read <$> some (satisfy isDigit)
+
+string :: String -> Parser String
+string [] = return []
+string (c:cs) = do { char c; string cs; return (c:cs)}
+
+token :: Parser a -> Parser a
+token p = do { a <- p; spaces ; return a}
+
+reserved :: String -> Parser String
+reserved s = token (string s)
+
+spaces :: Parser String
+spaces = many $ oneOf " \n\r"
+
+digit :: Parser Char
+digit = satisfy isDigit
+
+number :: Parser Int
+number = do
+  s <- string "-" <|> return []
+  cs <- some digit
+  return $ read (s ++ cs)
+
+parens :: Parser a -> Parser a
+parens m = do
+  reserved "("
+  n <- m
+  reserved ")"
+  return n
 
 
 
