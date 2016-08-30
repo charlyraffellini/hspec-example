@@ -17,7 +17,8 @@ module Parser.Monadic2 (Parser(Parser)
 ,number
 ,reserved
 ,token
-,string) where
+,string
+,parens) where
 
 --import Prelude hiding ((++))
 

@@ -17,6 +17,7 @@ library
       Data.String.Strip
       Parser.Monadic1
       Parser.Monadic2
+      Parser.Calculator
   build-depends:
       base    == 4.*
 
